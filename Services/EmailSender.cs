@@ -15,12 +15,18 @@ namespace BestStoreApi.Services
         private readonly string apiKey;
         private readonly string fromEmail;
         private readonly string senderName;
+        private readonly string gmailKey;
+        private readonly string gmailfromEmail;
 
         public EmailSender(IConfiguration configuration)
         {
             apiKey = configuration["EmailSender:ApiKey"]!;
             fromEmail = configuration["EmailSender:FromEmail"]!;
             senderName = configuration["EmailSender:SenderName"]!;
+
+            gmailKey = configuration["GmailCredentials:key"]!;
+            gmailfromEmail = configuration["GmailCredentials:FromEmail"]!;
+
         }
 
         public async Task SendEmail(string subject, string toEmail, string username, string message)
@@ -40,11 +46,11 @@ namespace BestStoreApi.Services
             {
                 EnableSsl = true,
                 UseDefaultCredentials = false,
-                Credentials = new NetworkCredential("rongawork@gmail.com", "hcfl ygsf xrwc itpl")
+                Credentials = new NetworkCredential(gmailKey, gmailfromEmail)
             };
 
             return client.SendMailAsync(
-                new MailMessage(from: "rongawork@gmail.com",
+                new MailMessage(from: gmailKey,
                                 to: email,
                                 subject,
                                 message
